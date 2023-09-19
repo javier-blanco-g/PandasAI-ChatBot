@@ -54,14 +54,15 @@ def clear_chat_state():
     st.session_state["submit"] = False
     st.session_state["total_cost_conversation"] = 0.0
     # Elimina el contenido de la carpeta de los gráficos
-    for chart in os.listdir(CHARTS_RELATIVE_PATH):
-        ruta_completa = os.path.join(CHARTS_RELATIVE_PATH, chart)
-        try:
-            if os.path.isfile(ruta_completa):
-                os.remove(ruta_completa)
-                print(f'Archivo eliminado: {ruta_completa}')
-        except Exception as e:
-            print(f'Ocurrió un error al eliminar {ruta_completa}: {str(e)}')
+    if os.path.exists(CHARTS_RELATIVE_PATH) and os.path.isdir(CHARTS_RELATIVE_PATH):
+        for chart in os.listdir(CHARTS_RELATIVE_PATH):
+            ruta_completa = os.path.join(CHARTS_RELATIVE_PATH, chart)
+            try:
+                if os.path.isfile(ruta_completa):
+                    os.remove(ruta_completa)
+                    print(f'Archivo eliminado: {ruta_completa}')
+            except Exception as e:
+                print(f'Ocurrió un error al eliminar {ruta_completa}: {str(e)}')
 
 
 def ask_pandasai(chat_messages) -> (str, float):
