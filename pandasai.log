@@ -1,0 +1,79 @@
+2023-09-21 23:37:29 [INFO] Question: [{'role': 'assistant', 'content': '¿En qué puedo ayudarte?'}, {'role': 'user', 'content': 'Dime el alumno con mejores notas'}]
+2023-09-21 23:37:29 [INFO] Running PandasAI with openai LLM...
+2023-09-21 23:37:29 [INFO] Prompt ID: 6831c434-9256-4c86-ac52-1e39b627682c
+2023-09-21 23:37:30 [INFO] error_code=None error_message='This is not a chat model and thus not supported in the v1/chat/completions endpoint. Did you mean to use v1/completions?' error_param=model error_type=invalid_request_error message='OpenAI API error received' stream_error=False
+2023-09-21 23:42:26 [INFO] Question: [{'role': 'assistant', 'content': '¿En qué puedo ayudarte?'}, {'role': 'user', 'content': 'Dime el alumno con mejores notas\n\n'}]
+2023-09-21 23:42:26 [INFO] Running PandasAI with openai LLM...
+2023-09-21 23:42:26 [INFO] Prompt ID: 3d2d3c14-ea48-41cd-83b0-8f43821cfb02
+2023-09-21 23:42:27 [INFO] error_code=None error_message='This is not a chat model and thus not supported in the v1/chat/completions endpoint. Did you mean to use v1/completions?' error_param=model error_type=invalid_request_error message='OpenAI API error received' stream_error=False
+2023-09-21 23:45:11 [INFO] Question: [{'role': 'assistant', 'content': '¿En qué puedo ayudarte?'}, {'role': 'user', 'content': 'hola'}]
+2023-09-21 23:45:11 [INFO] Running PandasAI with openai LLM...
+2023-09-21 23:45:11 [INFO] Prompt ID: d6a8a813-1299-4b14-bfdc-7835e1dd85bc
+2023-09-21 23:45:11 [INFO] error_code=model_not_found error_message='The model `gpt-4` does not exist or you do not have access to it. Learn more: https://help.openai.com/en/articles/7102672-how-can-i-access-gpt-4.' error_param=None error_type=invalid_request_error message='OpenAI API error received' stream_error=False
+2023-09-21 23:58:49 [INFO] Question: [{'role': 'assistant', 'content': '¿En qué puedo ayudarte?'}, {'role': 'user', 'content': 'hola'}, {'role': 'assistant', 'content': 'Unfortunately, I was not able to answer your question, because of the following error:\n\nThe model `gpt-4` does not exist or you do not have access to it. Learn more: https://help.openai.com/en/articles/7102672-how-can-i-access-gpt-4.\n'}, {'role': 'assistant', 'content': ''}, {'role': 'user', 'content': 'Dime el alumno con mejores notas\n\n'}]
+2023-09-21 23:58:49 [INFO] Running PandasAI with openai LLM...
+2023-09-21 23:58:49 [INFO] Prompt ID: dd0d8a2c-1b05-40cd-9eb0-e8d776f47240
+2023-09-21 23:58:50 [INFO] error_code=model_not_found error_message='The model `gpt-4` does not exist or you do not have access to it. Learn more: https://help.openai.com/en/articles/7102672-how-can-i-access-gpt-4.' error_param=None error_type=invalid_request_error message='OpenAI API error received' stream_error=False
+2023-09-21 23:58:57 [INFO] Question: [{'role': 'assistant', 'content': '¿En qué puedo ayudarte?'}, {'role': 'user', 'content': 'Dime el alumno con mejores notas\n\n'}]
+2023-09-21 23:58:57 [INFO] Running PandasAI with openai LLM...
+2023-09-21 23:58:57 [INFO] Prompt ID: 62d5b021-b48d-48ee-a25a-9660a8b84b10
+2023-09-21 23:59:10 [INFO] Code generated:
+```
+# TODO import all the dependencies required
+import pandas as pd
+
+def analyze_data(dfs: list[pd.DataFrame]) -> dict:
+    """
+    Analyze the data
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart save it to an image in exports/charts/temp_chart.png and do not show the chart.)
+    4. Output: return a dictionary of:
+    - type (possible values "text", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary, if the value is string this text has to be in the same language as the last user question in the conversation.)
+    Example output: { "type": "text", "value": "The average loan amount is $15,000." }
+    """
+    # Prepare
+    df = dfs[0]
+    
+    # Process
+    df['Nota'] = pd.to_numeric(df['Nota'], errors='coerce')
+    df_grouped = df.groupby('Nombre completo')['Nota'].mean().reset_index()
+    df_sorted = df_grouped.sort_values(by='Nota', ascending=False)
+    
+    # Analyze
+    top_student = df_sorted.iloc[0]['Nombre completo']
+    
+    # Output
+    output = {
+        "type": "text",
+        "value": f"El alumno con mejores notas es {top_student}."
+    }
+    
+    return output
+```
+
+2023-09-21 23:59:10 [INFO] 
+Code running:
+```
+def analyze_data(dfs: list[pd.DataFrame]) ->dict:
+    """
+    Analyze the data
+    1. Prepare: Preprocessing and cleaning data if necessary
+    2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
+    3. Analyze: Conducting the actual analysis (if the user asks to plot a chart save it to an image in exports/charts/temp_chart.png and do not show the chart.)
+    4. Output: return a dictionary of:
+    - type (possible values "text", "number", "dataframe", "plot")
+    - value (can be a string, a dataframe or the path of the plot, NOT a dictionary, if the value is string this text has to be in the same language as the last user question in the conversation.)
+    Example output: { "type": "text", "value": "The average loan amount is $15,000." }
+    """
+    df = dfs[0]
+    df['Nota'] = pd.to_numeric(df['Nota'], errors='coerce')
+    df_grouped = df.groupby('Nombre completo')['Nota'].mean().reset_index()
+    df_sorted = df_grouped.sort_values(by='Nota', ascending=False)
+    top_student = df_sorted.iloc[0]['Nombre completo']
+    output = {'type': 'text', 'value': f'El alumno con mejores notas es {top_student}.'}
+    return output
+        ```
+2023-09-21 23:59:10 [INFO] Answer: {'type': 'text', 'value': 'El alumno con mejores notas es Trini Campo Lladó.'}
+2023-09-21 23:59:10 [INFO] Executed in: 13.192930698394775s

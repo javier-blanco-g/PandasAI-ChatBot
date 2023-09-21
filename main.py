@@ -1,5 +1,4 @@
 # Importar las bibliotecas necesarias
-from langchain.llms import OpenAI
 from pandasai import SmartDataframe
 from pandasai.llm import OpenAI
 from pandasai.callbacks import BaseCallback
@@ -34,7 +33,8 @@ file_formats = {
 }
 # Define a dictionary of OpenAI models
 models = {
-    "GPT-3": "gpt-3.5-turbo-instruct",
+    # "GPT-3": "gpt-3.5-turbo-instruct",
+    "GPT-3": "gpt-3.5-turbo",
     "GPT-4": "gpt-4",
     # Han sido deprecados en versiones posteriores de la libreria
     # "HF-Starcoder": "Starcoder",
