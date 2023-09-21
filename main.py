@@ -12,12 +12,9 @@ from CustomPrompt import CustomGeneratePythonCodePrompt
 from datetime import datetime
 
 # Variable y callback para guardar el ultimo codigo ejecutado
-
-
 class SaveLastCodeGeneratedCallback(BaseCallback):
     def on_code(self, response: str):
         # Elimina líneas que contengan únicamente comentarios y líneas vacías
-        # print(response)
         clean_code = re.sub(r'#.*$', '', response, flags=re.MULTILINE)
         clean_code = re.sub(r'(""".*?""")|(\'\'\'.*?\'\'\')',
                             '', clean_code, flags=re.DOTALL)
@@ -37,7 +34,7 @@ file_formats = {
 }
 # Define a dictionary of OpenAI models
 models = {
-    "GPT-3": "gpt-3.5-turbo",
+    "GPT-3": "gpt-3.5-turbo-instruct",
     "GPT-4": "gpt-4",
     # Han sido deprecados en versiones posteriores de la libreria
     # "HF-Starcoder": "Starcoder",
@@ -47,7 +44,6 @@ models = {
 
 # Limpiar el estado, generar mensaje incial del asistente y borrar graficos
 def clear_chat_state():
-
     st.session_state["messages"] = [
         {"role": "assistant", "content": "¿En qué puedo ayudarte?"}]
     st.session_state["last_code_generated"] = ""
@@ -64,21 +60,19 @@ def clear_chat_state():
             except Exception as e:
                 print(f'Ocurrió un error al eliminar {ruta_completa}: {str(e)}')
 
-
+# Pregunta a pandas y recibe el coste de la llamada OpenAI API
 def ask_pandasai(chat_messages) -> (str, float):
     with get_openai_callback() as cb:
         respuesta = sdf.chat(chat_messages)
         return respuesta, cb.total_cost
 
 # Mostrar el código  ejecutado
-
-
 def show_code_expander(code: str):
     if config_show_executed_code:
         with st.expander("Código ejecutado."):
             st.code(code, language="python")
 
-
+# Muestra el componente que permite ver los costes
 def get_cost_info(cost: float) -> str:
     print(cost)
     new_total_cost_session = float(
@@ -95,16 +89,12 @@ def get_cost_info(cost: float) -> str:
 
 
 # Mostrar el coste de la operación
-
-
 def show_cost_expander(cost_info: float):
     if config_show_operation_cost:
         with st.expander("Información del gasto económico."):
             st.text(cost_info)
 
-# Mostar el grafico del assistente
-
-
+# Muestra y guarda las graficas generados del assistente
 def show_chart_image(chart_full_name: str):
     saved_chart_name = ""
     chart_path = CHARTS_RELATIVE_PATH+chart_full_name
@@ -143,7 +133,7 @@ def load_data(uploaded_file):
 
 
 if "total_cost_session" not in st.session_state:
-    st.session_state["total_cost_session"] = 0.0291945
+    st.session_state["total_cost_session"] = 0.0
 
 if "total_cost_conversation" not in st.session_state:
     st.session_state["total_cost_conversation"] = 0.0
@@ -279,8 +269,6 @@ if prompt := st.chat_input(placeholder=chat_input_msg, disabled=not uploaded_fil
             elif msg['role'] == "assistant_code":
                 msg['role'] = "assistant"
                 messages.append(msg)
-        print("=========================================")
-        print(messages)
         with st.spinner("Cargando..."):
             response, cost = ask_pandasai(messages)
             if response == None:
@@ -305,4 +293,6 @@ if prompt := st.chat_input(placeholder=chat_input_msg, disabled=not uploaded_fil
                 st.session_state.messages.append(
                     {"role": "assistant_cost", "content": str(cost_info)})
                 show_cost_expander(cost_info)
+            print("============================================")
+            print("PROMPT ENVIADO AL LLM")
             print(sdf.last_prompt)
